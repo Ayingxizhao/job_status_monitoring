@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  # Job Status API
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DB_TYPE=postgresql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=job_status
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=dev-secret-key
+      - AUTH_ENABLED=false
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    restart: unless-stopped
+    networks:
+      - job-status-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=job_status
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/migrations:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    networks:
+      - job-status-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - job-status-network
+
+  # MySQL Alternative (commented out)
+  # mysql:
+  #   image: mysql:8.0
+  #   environment:
+  #     - MYSQL_DATABASE=job_status
+  #     - MYSQL_USER=mysql
+  #     - MYSQL_PASSWORD=mysql
+  #     - MYSQL_ROOT_PASSWORD=root
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   restart: unless-stopped
+  #   networks:
+  #     - job-status-network
+
+
+
+  # Redis Commander (optional - for Redis management)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - job-status-network
+
+  # pgAdmin (optional - for PostgreSQL management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - job-status-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  # mysql_data:
+
+networks:
+  job-status-network:
+    driver: bridge
