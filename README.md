@@ -10,20 +10,6 @@ A dedicated, lightweight, database-agnostic job status API that fills the gap be
 - **Configurable TTL** for automatic cleanup of old jobs
 - **Query filtering** (by status, date range, tags)
 
-## 🛠 Technical Enhancements
-
-- **Database flexibility** - support PostgreSQL and MySQL
-- **Caching layer** (Redis) for frequently accessed jobs
-- **Rate limiting** and authentication
-- **OpenAPI/Swagger documentation**
-- **Docker containerization**
-
-## 📋 Prerequisites
-
-- Node.js 18+
-- Redis (for caching)
-- One of: PostgreSQL or MySQL
-
 ## 🚀 Quick Start
 
 1. **Clone and install dependencies:**
@@ -94,16 +80,6 @@ RATE_LIMIT_MAX=100
 - `GET /api/tags` - List all tags
 - `GET /api/tags/:tag/jobs` - Get jobs by tag
 
-## 🐳 Docker
-
-```bash
-# Build and run
-npm run docker:build
-npm run docker:run
-
-# Or use docker-compose
-docker-compose up -d
-```
 
 ## 🧪 Testing
 
@@ -111,19 +87,3 @@ docker-compose up -d
 npm test
 npm run test:watch
 ```
-
-## 📖 Documentation
-
-Interactive API documentation is available at `/api-docs` when the server is running.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📄 License
-
-MIT License - see LICENSE file for details.
