@@ -2,7 +2,7 @@
 
 A dedicated, lightweight, database-agnostic job status API that fills the gap between simple key-value storage and complex workflow engines.
 
-## 🚀 Core Features
+## Core Features
 
 - **Webhook notifications** when job status changes
 - **Bulk operations** for handling multiple jobs
